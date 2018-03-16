@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.utils import timezone
+from django.conf import settings
 # Create your models here.
 
 
@@ -84,4 +86,16 @@ class Post(models.Model):
     headline = models.CharField(max_length=200)
     content = models.TextField()
 
-    #add likes and comments
+    # add likes and comments and images
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
+
+    users_likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='post_likes')
+
+
+class Comment(models.Model):
+    post = models.ForeignKey('blog.Post', related_name='comments', on_delete=models.CASCADE)
+    text = models.TextField()
+    create_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text

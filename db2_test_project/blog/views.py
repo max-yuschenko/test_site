@@ -14,6 +14,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import MyUser, Post
 from django.core.mail import EmailMessage
 # Create your views here.
+from . import filters
 
 
 def home(request):
@@ -30,11 +31,34 @@ def activation_check(user):
 @user_passes_test(activation_check, login_url="/login/")
 def posts(request):
     post_list = Post.objects.all()
+    post_filter = filters.PostFilter(
+        request.GET,
+        queryset=post_list
+    )
     print(post_list)
     paginator = Paginator(post_list, 3)
 
     page = request.GET.get('page')
     posts = paginator.get_page(page)
+    return render(request, 'posts.html', {'posts': posts, 'filter': post_filter})
+
+
+@user_passes_test(activation_check, login_url="/login/")
+def search(request):
+    filtered_qs = filters.PostFilter(
+        request.GET,
+        queryset=Post.objects.all()
+    )
+    print(filtered_qs)
+    paginator = Paginator(filtered_qs, 3)
+
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
     return render(request, 'posts.html', {'posts': posts})
 
 
@@ -81,3 +105,7 @@ def activate(request, uidb64, token):
         return render(request, 'email_confirmation.html', {})
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+def post_detail(request):
+    pass

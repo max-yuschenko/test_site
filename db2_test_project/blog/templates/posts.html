@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
+	
+	<form method="get">
+    	{{ filter.form.as_p }}
+    	<button type="submit">Search</button>
+  	</form>
 
 	{% block title %}Posts{% endblock %}</br>
+
 	{%for post in posts%}
-		{{post.headline}}<br/>
+		<div class="post-item">
+			<h2>{{post.headline}}</h2>
+			<img src="{{ post.image.url }}" height="256" width="256" >
+			<a href="{% url 'post_detail' %}">Details...</a>
+		</div>
+		
 	{%endfor%}
 
 	<div class="pagination">

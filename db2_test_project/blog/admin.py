@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from blog.models import MyUser, Post
+from blog.models import MyUser, Post, Comment
 # Register your models here.
 
 
@@ -82,5 +82,6 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Post)
+admin.site.register(Comment)
 # unregister the Group model from admin.
 admin.site.unregister(Group)

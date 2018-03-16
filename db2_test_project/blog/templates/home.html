@@ -8,6 +8,12 @@
 
   {% if user.is_active %}
   <!-- posts here -->
+  		<a href="{% url 'posts' %}"> Posts</a>
+
+  		
   {% endif %}
+  {%else%}
+  <h3>Log in to see posts</h3>
   {% endif%}
+
 {% endblock %}

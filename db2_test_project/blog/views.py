@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import SignupForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -9,13 +10,32 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 # from django.contrib.auth.models import User
-from .models import MyUser
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import MyUser, Post
 from django.core.mail import EmailMessage
 # Create your views here.
 
 
 def home(request):
+    # if request.user.is_active:
+    #     return posts(request)
     return render(request, 'home.html')
+
+
+def activation_check(user):
+    return user.is_active
+
+
+# @login_required
+@user_passes_test(activation_check, login_url="/login/")
+def posts(request):
+    post_list = Post.objects.all()
+    print(post_list)
+    paginator = Paginator(post_list, 3)
+
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
+    return render(request, 'posts.html', {'posts': posts})
 
 
 def signup(request):

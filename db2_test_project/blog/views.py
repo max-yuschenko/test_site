@@ -13,6 +13,7 @@ from .tokens import account_activation_token
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import MyUser, Post
 from django.core.mail import EmailMessage
+from django.views import generic
 # Create your views here.
 from . import filters
 
@@ -107,5 +108,5 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def post_detail(request):
-    pass
+class PostDetailView(generic.DetailView):
+    model = Post

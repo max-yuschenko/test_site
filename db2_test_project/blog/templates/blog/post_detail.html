@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<a href="{% url 'posts' %}">back to list</a>
+	<h1>Title: {{ post.headline }}</h1>
+
+	<p><strong>Date of publication:</strong> {{post.pub_date}} </p> 
+	<img src="{{ post.image.url }}">
+	<p><strong>Content:</strong> {{ post.content }}</p>
+{% endblock %}

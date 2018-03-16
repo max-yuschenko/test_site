@@ -91,6 +91,9 @@ class Post(models.Model):
 
     users_likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='post_likes')
 
+    def get_absolute_url(self):
+        return "/post_detail/%i/" % self.id
+
 
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments', on_delete=models.CASCADE)
